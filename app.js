@@ -184,6 +184,7 @@
   function onState(e) {
     var S = YT.PlayerState;
     if (e.data === S.PLAYING) {
+      if (window.onMusicPlaying) window.onMusicPlaying();
       playing = true;
       errorStreak = 0;
       dismissed = false;
@@ -483,6 +484,165 @@
     }
   }
 
+  /* 每日禱告：依台灣日期每天換一則；看到區塊時朗讀，朗讀時暫停音樂，結束後接續播放 */
+  function setupPrayer() {
+    var list = window.PRAYERS;
+    if (!list || !list.length) { $("prayer").hidden = true; return; }
+
+    var taiwan = new Date(Date.now() + 8 * 3600000);
+    var day = Math.floor(taiwan.getTime() / 86400000);
+    var item = list[day % list.length];
+    $("prayer-date").textContent = (taiwan.getUTCMonth() + 1) + " 月 " + taiwan.getUTCDate() + " 日";
+    $("prayer-verse").textContent = item.text;
+    $("prayer-ref").textContent = item.ref;
+    $("prayer-text").textContent = item.prayer;
+
+    var synth = window.speechSynthesis;
+    var btn = $("prayer-btn");
+    var status = $("prayer-status");
+    if (!synth || !window.SpeechSynthesisUtterance) {
+      btn.hidden = true;
+      status.textContent = "這個瀏覽器不支援朗讀，歡迎靜心默讀。";
+      return;
+    }
+
+    var run = 0;            /* 每次朗讀的編號，用來忽略已取消的回呼 */
+    var reading = false;
+    var resumeMusic = false;
+    var pausedAt = 0;
+    var autoDone = false;
+
+    function spokenRef(ref) {
+      var m = ref.match(/^(\S+) (\d+):(\d+)(?:-(\d+))?$/);
+      if (!m) return ref;
+      return m[1] + "第" + m[2] + (m[1] === "詩篇" ? "篇" : "章") + "第" + m[3] + (m[4] ? "到第" + m[4] : "") + "節";
+    }
+
+    /* 裝置提供的語音不同，依序挑常見的輕柔中文女聲，並避開男聲與粵語 */
+    function pickVoice() {
+      var voices = synth.getVoices().filter(function (v) {
+        return /^zh/i.test(v.lang) && !/HK|yue/i.test(v.lang) &&
+          !/Zhiwei|Yunjhe|Kangkang|Yunxi|Yunyang|Yunjian|Li-?mu|Danny|Hanhan.*Male/i.test(v.name);
+      });
+      var names = ["HsiaoChen", "HsiaoYu", "Hanhan", "Yating", "Mei-?Jia", "Xiaoxiao", "Xiaoyi", "Ting-?Ting", "Google 國語", "Google 普通话"];
+      for (var i = 0; i < names.length; i++) {
+        var re = new RegExp(names[i], "i");
+        var hit = voices.filter(function (v) { return re.test(v.name); })[0];
+        if (hit) return hit;
+      }
+      return voices.filter(function (v) { return /TW/i.test(v.lang); })[0] || voices[0] || null;
+    }
+
+    /* 分句朗讀，避免部分瀏覽器遇到長句中途停止 */
+    function sentences() {
+      var all = "今日經文，" + spokenRef(item.ref) + "。" + item.text + item.prayer;
+      return all.match(/[^。！？]+[。！？」]*/g) || [all];
+    }
+
+    function setIdle() {
+      reading = false;
+      btn.textContent = "聆聽今日禱告";
+    }
+
+    function finish(message) {
+      run += 1;
+      synth.cancel();
+      setIdle();
+      status.textContent = message || "";
+      if (resumeMusic && ytPlayer && playerReady) ytPlayer.playVideo();
+      resumeMusic = false;
+    }
+
+    function startReading(auto) {
+      run += 1;
+      var mine = run;
+      var parts = sentences();
+      var voice = pickVoice();
+      var index = 0;
+      var begun = false;
+      synth.cancel();
+
+      function failed() {
+        if (mine !== run || begun) return;
+        run += 1;
+        synth.cancel();
+        setIdle();
+        status.textContent = auto
+          ? "您的瀏覽器需要先按一下才能朗讀，請按上方按鈕聆聽。"
+          : "這個裝置目前無法朗讀，歡迎靜心默讀。";
+      }
+
+      function speakNext() {
+        if (mine !== run) return;
+        if (index >= parts.length) { finish(""); return; }
+        var u = new SpeechSynthesisUtterance(parts[index]);
+        index += 1;
+        u.lang = voice ? voice.lang : "zh-TW";
+        if (voice) u.voice = voice;
+        u.rate = 0.85;
+        u.pitch = 1.1;
+        u.onstart = function () {
+          if (mine !== run || begun) return;
+          begun = true;
+          reading = true;
+          btn.textContent = "停止朗讀";
+          status.textContent = "正在朗讀今日禱告。";
+          if (playing && ytPlayer && playerReady) {
+            resumeMusic = true;
+            pausedAt = Date.now();
+            ytPlayer.pauseVideo();
+            status.textContent = "正在朗讀今日禱告，音樂已暫停，結束後會接續播放。";
+          }
+        };
+        u.onend = speakNext;
+        u.onerror = function () {
+          if (begun) finish("");
+          else failed();
+        };
+        synth.speak(u);
+      }
+
+      speakNext();
+      setTimeout(failed, 2500);
+    }
+
+    /* 使用者自己按下播放音樂時，停止朗讀且不再自動接續 */
+    window.onMusicPlaying = function () {
+      if (!reading || Date.now() - pausedAt < 1000) return;
+      resumeMusic = false;
+      finish("");
+    };
+
+    btn.addEventListener("click", function () {
+      autoDone = true;
+      if (reading) finish("");
+      else startReading(false);
+    });
+
+    window.addEventListener("pagehide", function () { synth.cancel(); });
+    if (synth.addEventListener) synth.addEventListener("voiceschanged", function () {});
+    synth.getVoices();
+
+    /* 每次進站自動朗讀一次；停留約 1 秒才開始，快速捲過不會打斷音樂 */
+    if ("IntersectionObserver" in window) {
+      var timer = 0;
+      new IntersectionObserver(function (entries) {
+        clearTimeout(timer);
+        if (!entries[0].isIntersecting || autoDone) return;
+        timer = setTimeout(function () {
+          if (autoDone || document.hidden) return;
+          autoDone = true;
+          var ua = navigator.userActivation;
+          if (ua && !ua.hasBeenActive) {
+            status.textContent = "您的瀏覽器需要先按一下才能朗讀，請按上方按鈕聆聽。";
+            return;
+          }
+          startReading(true);
+        }, 1000);
+      }, { threshold: 0.35 }).observe($("prayer"));
+    }
+  }
+
   /* 事件 */
   document.addEventListener("click", function (e) {
     var el = e.target.closest ? e.target.closest("[data-act]") : null;
@@ -556,6 +716,7 @@
   showSong(SONGS[0]);
   setPlayIcons();
   setupVerse();
+  setupPrayer();
   setupBackgrounds();
   setupCredits();
   setupSupport();

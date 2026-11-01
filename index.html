@@ -27,6 +27,7 @@
         <a class="brand" href="#top"><img src="assets/avatar.jpg" alt="" width="36" height="36"><span>主在身旁</span></a>
         <div class="nav-links">
           <a href="#listen">聽歌</a>
+          <a href="#prayer">禱告</a>
           <a href="#about">關於</a>
           <a class="nav-support" href="#support">支持創作</a>
         </div>
@@ -129,6 +130,20 @@
       </div>
     </section>
 
+    <section class="prayer" id="prayer" aria-labelledby="prayer-h">
+      <div class="wrap prayer-inner">
+        <p class="prayer-date" id="prayer-date"></p>
+        <h2 id="prayer-h">每日禱告小語</h2>
+        <blockquote class="prayer-verse">
+          <p id="prayer-verse"></p>
+          <cite id="prayer-ref"></cite>
+        </blockquote>
+        <p class="prayer-text" id="prayer-text"></p>
+        <button class="btn btn-sun" id="prayer-btn" type="button">聆聽今日禱告</button>
+        <p class="prayer-status" id="prayer-status" role="status"></p>
+      </div>
+    </section>
+
     <section class="about" id="about" aria-labelledby="about-h">
       <div class="wrap">
         <h2 id="about-h">每一首，都是一份禱告</h2>
@@ -205,6 +220,7 @@
 
   <script src="songs.js"></script>
   <script src="catalog.js"></script>
+  <script src="prayers.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
