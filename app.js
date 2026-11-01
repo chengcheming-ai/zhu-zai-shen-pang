@@ -296,7 +296,6 @@
     var at = getNow();
     var was = playing;
     mode = next;
-    try { localStorage.setItem("playMode", mode); } catch (e) {}
     showMode();
     syncFacade();
     if (!started) return;
@@ -846,7 +845,6 @@
 
   buildOrder(0);
   $("repeat").classList.add("is-on");
-  try { if (localStorage.getItem("playMode") === "audio") mode = "audio"; } catch (e) {}
   showMode();
   showSong(SONGS[0]);
   setPlayIcons();
