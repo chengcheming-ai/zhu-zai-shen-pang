@@ -656,7 +656,7 @@
     }
   }
 
-  /* 每日禱告：依台灣日期每天換一則；看到區塊時播放音檔，播放時暫停音樂，結束後接續 */
+  /* 每日禱告：依台灣日期每天換一則；按下按鈕才播放音檔，播放時暫停音樂，結束後接續 */
   function setupPrayer() {
     var list = window.PRAYERS;
     if (!list || !list.length) { $("prayer").hidden = true; return; }
@@ -675,7 +675,6 @@
     var reading = false;
     var resumeMusic = false;
     var pausedAt = 0;
-    var autoDone = false;
 
     audio.preload = "none";
     audio.src = "audio/prayers/" + String(index + 1).padStart(2, "0") + ".mp3";
@@ -690,15 +689,13 @@
       resumeMusic = false;
     }
 
-    function start(auto) {
+    function start() {
       var attempt = audio.play();
       if (attempt && attempt.catch) {
         attempt.catch(function (e) {
           if (reading) return;
           if (e && e.name === "NotAllowedError") {
-            status.textContent = auto
-              ? "您的瀏覽器需要先按一下才能播放，請按上方按鈕聆聽。"
-              : "這個瀏覽器目前無法播放，歡迎靜心默讀。";
+            status.textContent = "這個瀏覽器目前無法播放，歡迎靜心默讀。";
           } else if (!e || e.name !== "AbortError") {
             status.textContent = "目前無法播放禱告音檔，歡迎靜心默讀。";
           }
@@ -729,26 +726,11 @@
     };
 
     btn.addEventListener("click", function () {
-      autoDone = true;
       if (reading) finish("");
-      else start(false);
+      else start();
     });
 
     window.addEventListener("pagehide", function () { audio.pause(); });
-
-    /* 每次進站自動播放一次；停留約 1 秒才開始，快速捲過不會打斷音樂 */
-    if ("IntersectionObserver" in window) {
-      var timer = 0;
-      new IntersectionObserver(function (entries) {
-        clearTimeout(timer);
-        if (!entries[0].isIntersecting || autoDone) return;
-        timer = setTimeout(function () {
-          if (autoDone || document.hidden || collapsed) return;
-          autoDone = true;
-          start(true);
-        }, 1000);
-      }, { threshold: 0.35 }).observe($("prayer"));
-    }
   }
 
   /* 事件 */
