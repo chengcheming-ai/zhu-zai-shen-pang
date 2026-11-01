@@ -127,6 +127,9 @@ h1 { font-size: clamp(3.25rem, 9vw, 6.5rem); line-height: 1.05; letter-spacing: 
 .now-label { font-size: .8125rem; font-weight: 700; color: var(--sun); letter-spacing: .04em; }
 .now-title { font-size: clamp(1.375rem, 2.6vw, 1.875rem); line-height: 1.35; }
 .now-en { color: var(--on-night-soft); }
+.mode-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding-top: 12px; }
+.mode-hint { font-size: .82rem; color: var(--on-night-soft); }
+body.is-playing .facade .play-disc { opacity: 0; }
 .seek-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; padding-top: 10px; }
 .time { color: var(--on-night-soft); font-size: .8125rem; font-variant-numeric: tabular-nums; min-width: 2.6em; }
 .seek-row .time:last-child { text-align: right; }
