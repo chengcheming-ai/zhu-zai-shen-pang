@@ -210,7 +210,19 @@ body.stage-collapsed .queue { padding: clamp(14px, 2.2vw, 26px); }
 .support-grid > div { min-width: 0; }
 .support h2 { margin-bottom: 16px; }
 .give { display: grid; gap: 14px; }
-.btn-line { color: var(--glow-fg); border-color: var(--glow-fg); background: transparent; }
+.btn-yt { background: #e00000; color: #fff; box-shadow: 0 8px 26px rgba(224, 0, 0, .28); }
+.btn-yt:hover { background: #c40000; }
+.btn-share { min-height: 56px; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.btn-share:active { transform: scale(.96); box-shadow: none; filter: brightness(.88); }
+.btn-share .icon-done { display: none; }
+.btn-share.is-done .icon-default { display: none; }
+.btn-share.is-done .icon-done { display: block; }
+@media (hover: none) {
+  .btn-share:hover { transform: none; }
+  .btn-share.btn-sun:hover { background: var(--sun); }
+  .btn-share.btn-yt:hover { background: #e00000; }
+  .btn-share:active { transform: scale(.96); }
+}
 .support :focus-visible { outline-color: var(--glow-fg); }
 
 /* 畫作出處 */

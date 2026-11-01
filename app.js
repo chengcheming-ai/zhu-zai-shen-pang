@@ -638,15 +638,30 @@
   }
 
   /* 手機用系統分享選單；不支援時複製連結 */
-  function shareLink(title, url) {
-    function copied() { toast("連結已複製，可以貼給朋友了。"); }
+  function shareLink(btn, title, url) {
+    var label = btn.querySelector(".btn-text");
+    var original = label.textContent;
+    function done(text) {
+      label.textContent = text;
+      btn.classList.add("is-done");
+      clearTimeout(btn.doneTimer);
+      btn.doneTimer = setTimeout(function () {
+        label.textContent = original;
+        btn.classList.remove("is-done");
+      }, 2500);
+    }
     function failed() { toast("請複製這個連結分享：" + url); }
     function copy() {
-      if (navigator.clipboard) navigator.clipboard.writeText(url).then(copied, failed);
-      else failed();
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(function () { done("連結已複製"); }, failed);
+      } else {
+        failed();
+      }
     }
     if (navigator.share) {
-      navigator.share({ title: title, url: url }).catch(function (err) {
+      navigator.share({ title: title, url: url }).then(function () {
+        done("已分享，謝謝你");
+      }, function (err) {
         if (err.name !== "AbortError") copy();
       });
     } else {
@@ -655,11 +670,19 @@
   }
 
   function setupShare() {
-    $("share-site").addEventListener("click", function () {
-      shareLink("主在身旁｜華語敬拜詩歌", "https://chengcheming-ai.github.io/zhu-zai-shen-pang/");
+    var site = $("share-site");
+    var channel = $("share-channel");
+    var siteLabel = site.querySelector(".btn-text").textContent;
+    var channelLabel = channel.querySelector(".btn-text").textContent;
+    /* iPhone 的 Safari 要有 touchstart 監聽，按下效果才會出現 */
+    document.addEventListener("touchstart", function () {}, { passive: true });
+    site.addEventListener("click", function () {
+      if (site.classList.contains("is-done")) site.querySelector(".btn-text").textContent = siteLabel;
+      shareLink(site, "主在身旁｜華語敬拜詩歌", "https://chengcheming-ai.github.io/zhu-zai-shen-pang/");
     });
-    $("share-channel").addEventListener("click", function () {
-      shareLink("主在身旁 YouTube 頻道", SITE.channelUrl);
+    channel.addEventListener("click", function () {
+      if (channel.classList.contains("is-done")) channel.querySelector(".btn-text").textContent = channelLabel;
+      shareLink(channel, "主在身旁 YouTube 頻道", SITE.channelUrl);
     });
     if (SITE.contactEmail) {
       $("contact").textContent = "聯絡：" + SITE.contactEmail;
