@@ -31,6 +31,7 @@
   var musicAudio = new Audio();
   var audioId = null;
   var pendingSeek = 0;
+  var collapsed = false;
 
   function $(id) { return document.getElementById(id); }
   function thumb(id) { return "https://i.ytimg.com/vi/" + encodeURIComponent(id) + "/hqdefault.jpg"; }
@@ -153,7 +154,7 @@
     var floatIt = started && !usingAudio() && !slotVisible && !listenVisible && !dismissed;
     $("player").classList.toggle("floating", floatIt);
     $("mini-close").hidden = !floatIt;
-    var showDock = started && !slotVisible;
+    var showDock = started && (!slotVisible || collapsed);
     $("dock").hidden = !showDock;
     document.body.classList.toggle("has-dock", showDock);
   }
@@ -202,7 +203,11 @@
   }
 
   function onState(e) {
-    if (usingAudio()) return;
+    if (usingAudio()) {
+      /* 影片還在載入時切到背景播放，晚一步開始的影片要停掉，避免和音檔重疊 */
+      if (e.data === YT.PlayerState.PLAYING) ytPlayer.pauseVideo();
+      return;
+    }
     var S = YT.PlayerState;
     if (e.data === S.PLAYING) {
       if (window.onMusicPlaying) window.onMusicPlaying();
@@ -319,6 +324,26 @@
     updateFloating();
   }
 
+  /* 背景播放時收起播放區，只留底部小播放列；影片必須可見，所以改播影片時一律展開 */
+  function setCollapsed(on) {
+    collapsed = on;
+    document.body.classList.toggle("stage-collapsed", on);
+    updateFloating();
+  }
+
+  function startBackground() {
+    var was = playing;
+    setMode("audio");
+    if (!hasAudio(currentSong())) {
+      if (!was) playCurrent();
+      return;
+    }
+    if (!was) toggle();
+    setCollapsed(true);
+    $("listen-h").scrollIntoView();
+    toast("背景播放中，可以鎖定螢幕或切到其他 App。");
+  }
+
   function showMode() {
     $("mode-video").setAttribute("aria-pressed", String(mode === "video"));
     $("mode-audio").setAttribute("aria-pressed", String(mode === "audio"));
@@ -347,6 +372,7 @@
       return;
     }
     musicAudio.pause();
+    if (collapsed) setCollapsed(false);
     if (mode === "audio") toast("這首歌還沒有音檔，先以影片播放。");
     if (ytPlayer && playerReady) {
       ytPlayer.loadVideoById(currentSong().id);
@@ -414,6 +440,7 @@
   }
 
   function goToPlayer() {
+    if (collapsed) setCollapsed(false);
     $("listen").scrollIntoView();
   }
 
@@ -694,7 +721,9 @@
 
     /* 使用者自己按下播放音樂時，停止禱告且不再自動接續 */
     window.onMusicPlaying = function () {
-      if (!reading || Date.now() - pausedAt < 1000) return;
+      if (!reading) return;
+      /* 剛暫停音樂的 1 秒內，音樂回報開始多半是延遲的訊息；再暫停一次，避免兩個聲音重疊 */
+      if (Date.now() - pausedAt < 1000) { musicPause(); return; }
       resumeMusic = false;
       finish("");
     };
@@ -714,7 +743,7 @@
         clearTimeout(timer);
         if (!entries[0].isIntersecting || autoDone) return;
         timer = setTimeout(function () {
-          if (autoDone || document.hidden) return;
+          if (autoDone || document.hidden || collapsed) return;
           autoDone = true;
           start(true);
         }, 1000);
@@ -736,7 +765,7 @@
     else playCurrent();
   });
   $("mode-video").addEventListener("click", function () { setMode("video"); });
-  $("mode-audio").addEventListener("click", function () { setMode("audio"); });
+  $("mode-audio").addEventListener("click", startBackground);
 
   musicAudio.preload = "auto";
   musicAudio.addEventListener("loadedmetadata", function () {

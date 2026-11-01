@@ -1,4 +1,4 @@
-/* 把本機影片檔的聲音轉成 MP3，供網站「純音樂」模式使用。只在本機執行，不會更動來源影片。
+/* 把本機影片檔的聲音轉成 MP3，供網站「背景播放」使用。只在本機執行，不會更動來源影片。
    用法：node scripts/build-song-audio.js "C:\Users\cheng\Desktop\Youtube"
    已轉過的歌會跳過，所以有新歌時重跑同一行即可，然後 commit 並 push。
    需要 ffmpeg：npm install --prefix .tools ffmpeg-static（裝在 repo 內，git 會忽略）。 */
