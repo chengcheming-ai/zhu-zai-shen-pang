@@ -209,13 +209,8 @@ body.stage-collapsed .queue { padding: clamp(14px, 2.2vw, 26px); }
 .support-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 72px); align-items: center; }
 .support-grid > div { min-width: 0; }
 .support h2 { margin-bottom: 16px; }
-.support-more { margin-top: 12px; }
 .give { display: grid; gap: 14px; }
-.give-label { font-weight: 700; }
-.methods { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-.methods li { padding: 4px 14px; border: 1.5px solid var(--glow-line); border-radius: 999px; font-size: .9375rem; }
-.pending { padding: 14px 16px; border: 1.5px dashed var(--glow-line); border-radius: 8px; font-weight: 500; }
-.note { color: var(--glow-muted); font-size: .875rem; line-height: 1.6; }
+.btn-line { color: var(--glow-fg); border-color: var(--glow-fg); background: transparent; }
 .support :focus-visible { outline-color: var(--glow-fg); }
 
 /* 畫作出處 */

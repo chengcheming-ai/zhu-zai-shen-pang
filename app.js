@@ -637,18 +637,30 @@
     $("credit-rows").append(frag);
   }
 
-  function setupSupport() {
-    SITE.payMethods.forEach(function (m) {
-      var li = document.createElement("li");
-      li.textContent = m;
-      $("methods").append(li);
-    });
-    if (/^https:\/\//.test(SITE.donateUrl)) {
-      $("donate").href = SITE.donateUrl;
-      $("donate").hidden = false;
-      $("pending").hidden = true;
-      $("give-label").textContent = "贊助方式";
+  /* 手機用系統分享選單；不支援時複製連結 */
+  function shareLink(title, url) {
+    function copied() { toast("連結已複製，可以貼給朋友了。"); }
+    function failed() { toast("請複製這個連結分享：" + url); }
+    function copy() {
+      if (navigator.clipboard) navigator.clipboard.writeText(url).then(copied, failed);
+      else failed();
     }
+    if (navigator.share) {
+      navigator.share({ title: title, url: url }).catch(function (err) {
+        if (err.name !== "AbortError") copy();
+      });
+    } else {
+      copy();
+    }
+  }
+
+  function setupShare() {
+    $("share-site").addEventListener("click", function () {
+      shareLink("主在身旁｜華語敬拜詩歌", "https://chengcheming-ai.github.io/zhu-zai-shen-pang/");
+    });
+    $("share-channel").addEventListener("click", function () {
+      shareLink("主在身旁 YouTube 頻道", SITE.channelUrl);
+    });
     if (SITE.contactEmail) {
       $("contact").textContent = "聯絡：" + SITE.contactEmail;
       $("contact").hidden = false;
@@ -852,7 +864,7 @@
   setupPrayer();
   setupBackgrounds();
   setupCredits();
-  setupSupport();
+  setupShare();
   renderChips();
   renderTracks();
   loadApi();

@@ -4,13 +4,6 @@
 window.SITE = {
   channelUrl: "https://www.youtube.com/channel/UCmoZoat_37Zbqo-Zpnze0TA",
 
-  /* 收款連結：開通斗內平台後，把網址貼在引號內（須為 https:// 開頭）。
-     留空時，網頁會顯示「贊助功能準備中」，不會出現可點擊的付款按鈕。 */
-  donateUrl: "",
-
-  /* 付款頁實際提供的方式，請依開通結果修改 */
-  payMethods: ["LINE Pay", "ATM 轉帳", "信用卡"],
-
   /* 聯絡信箱：留空時不顯示 */
   contactEmail: ""
 };
