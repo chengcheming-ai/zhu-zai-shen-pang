@@ -2,7 +2,8 @@ name: 同步 YouTube 新歌
 
 on:
   schedule:
-    - cron: "17 * * * *"
+    # 每週一、四 台灣時間 09:17（cron 使用 UTC）
+    - cron: "17 1 * * 1,4"
   workflow_dispatch:
 
 permissions:
