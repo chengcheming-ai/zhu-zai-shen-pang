@@ -80,6 +80,12 @@
               <p class="now-en" id="now-en"></p>
             </div>
 
+            <figure class="song-verse" id="song-verse" hidden>
+              <figcaption>這首歌的經文</figcaption>
+              <blockquote id="sv-text"></blockquote>
+              <cite id="sv-ref"></cite>
+            </figure>
+
             <div class="seek-row">
               <span class="time" id="time-now">0:00</span>
               <input id="seek" type="range" min="0" max="1000" value="0" aria-label="播放進度">
@@ -103,7 +109,6 @@
               </button>
             </div>
 
-            <p class="song-verse" id="song-verse" hidden></p>
           </div>
 
           <div class="queue">
@@ -183,7 +188,7 @@
     <div class="dock-inner">
       <button class="dock-song" id="dock-song" type="button" aria-label="回到播放器">
         <img id="dock-img" alt="" width="64" height="36">
-        <span class="dock-text"><strong id="dock-title"></strong><small id="dock-en"></small></span>
+        <span class="dock-text"><strong id="dock-title"></strong><small id="dock-verse"></small></span>
       </button>
       <div class="dock-controls" role="group" aria-label="播放控制">
         <button class="ctl" type="button" data-act="prev" aria-label="上一首" title="上一首">
@@ -199,6 +204,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="songs.js"></script>
+  <script src="catalog.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

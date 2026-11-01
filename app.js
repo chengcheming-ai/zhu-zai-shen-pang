@@ -3,7 +3,6 @@
 
   var SITE = window.SITE;
   var SONGS = window.SONGS;
-  var VERSES = window.VERSES;
   var THEMES = window.THEMES;
 
   var ICON_PLAY = '<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg>';
@@ -32,12 +31,6 @@
   function $(id) { return document.getElementById(id); }
   function thumb(id) { return "https://i.ytimg.com/vi/" + encodeURIComponent(id) + "/hqdefault.jpg"; }
   function watchUrl(id) { return "https://www.youtube.com/watch?v=" + encodeURIComponent(id); }
-  function verseOf(song) {
-    return VERSES.filter(function (v) { return v.songs.indexOf(song.zh) !== -1; })[0] || null;
-  }
-  function songByName(name) {
-    return SONGS.filter(function (s) { return s.zh === name; })[0] || null;
-  }
   function clock(sec) {
     if (!isFinite(sec) || sec < 0) sec = 0;
     var m = Math.floor(sec / 60);
@@ -84,20 +77,29 @@
     $("now-en").textContent = song.en;
     $("now-link").href = watchUrl(song.id);
     $("dock-title").textContent = song.zh;
-    $("dock-en").textContent = song.en;
     $("dock-img").src = thumb(song.id);
-    $("time-total").textContent = song.time;
-    var verse = verseOf(song);
+    $("time-total").textContent = song.time || "0:00";
+    showVerse(song);
+    markCurrent();
+  }
+
+  /* 經文跟著目前的歌切換：播放區、底部播放列、頁首同步更新 */
+  function showVerse(song) {
+    var verse = song.verse;
     var box = $("song-verse");
     box.hidden = !verse;
-    if (verse) {
-      box.textContent = "";
-      box.append(verse.text + " ");
-      var b = document.createElement("b");
-      b.textContent = verse.ref;
-      box.append(b);
+    $("dock-verse").textContent = verse ? verse.ref + "｜" + verse.text : song.en;
+    if (!verse) return;
+    $("sv-text").textContent = verse.text;
+    $("sv-ref").textContent = verse.ref;
+    box.classList.remove("verse-in");
+    void box.offsetWidth;
+    box.classList.add("verse-in");
+    if (started) {
+      $("verse-text").textContent = verse.text;
+      $("verse-ref").textContent = verse.ref;
+      $("verse-song").hidden = true;
     }
-    markCurrent();
   }
 
   function markCurrent() {
@@ -290,8 +292,7 @@
   /* 清單 */
   function themeSongs() {
     if (theme === "全部") return SONGS;
-    var t = THEMES.filter(function (x) { return x.name === theme; })[0];
-    return t ? SONGS.filter(function (s) { return t.songs.indexOf(s.zh) !== -1; }) : SONGS;
+    return SONGS.filter(function (s) { return s.theme === theme; });
   }
 
   function visibleSongs() {
@@ -305,7 +306,7 @@
 
   function renderChips() {
     var frag = document.createDocumentFragment();
-    ["全部"].concat(THEMES.map(function (t) { return t.name; })).forEach(function (name) {
+    ["全部"].concat(THEMES).forEach(function (name) {
       var b = document.createElement("button");
       b.type = "button";
       b.className = "chip";
@@ -371,31 +372,28 @@
     markCurrent();
   }
 
-  /* 隨機經文 */
+  /* 開站時隨機顯示一首歌的經文，並可直接播放那首歌 */
   function setupVerse() {
     var last = null;
     try { last = localStorage.getItem("lastVerse"); } catch (e) {}
-    var pool = VERSES.filter(function (v) { return v.ref !== last; });
-    var v = pool[randomInt(pool.length)];
-    $("verse-text").textContent = v.text;
-    $("verse-ref").textContent = v.ref;
-    try { localStorage.setItem("lastVerse", v.ref); } catch (e) {}
+    var pool = SONGS.filter(function (s) { return s.verse && s.verse.ref !== last; });
+    if (!pool.length) return;
+    var song = pool[randomInt(pool.length)];
+    $("verse-text").textContent = song.verse.text;
+    $("verse-ref").textContent = song.verse.ref;
+    try { localStorage.setItem("lastVerse", song.verse.ref); } catch (e) {}
 
-    var related = v.songs.map(songByName).filter(Boolean);
-    if (related.length) {
-      var song = related[randomInt(related.length)];
-      var btn = $("verse-song");
-      btn.textContent = "聆聽相關詩歌《" + song.zh + "》";
-      btn.hidden = false;
-      btn.addEventListener("click", function () {
-        theme = "全部";
-        $("q").value = "";
-        renderChips();
-        renderTracks();
-        playFrom(SONGS, song);
-        goToPlayer();
-      });
-    }
+    var btn = $("verse-song");
+    btn.textContent = "聆聽相關詩歌《" + song.zh + "》";
+    btn.hidden = false;
+    btn.addEventListener("click", function () {
+      theme = "全部";
+      $("q").value = "";
+      renderChips();
+      renderTracks();
+      playFrom(SONGS, song);
+      goToPlayer();
+    });
   }
 
   /* 背景輪播 */

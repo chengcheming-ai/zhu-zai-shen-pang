@@ -138,8 +138,12 @@ h1 { font-size: clamp(3.25rem, 9vw, 6.5rem); line-height: 1.05; letter-spacing: 
 .ctl-main { width: 60px; height: 60px; background: var(--sun); color: var(--sun-ink); }
 .ctl-main:hover { background: var(--sun-hover); transform: scale(1.05); }
 .repeat-one { position: absolute; right: 7px; bottom: 6px; font-size: .625rem; font-weight: 700; line-height: 1; }
-.song-verse { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--night-line); color: var(--on-night-soft); font-size: .9375rem; line-height: 1.7; }
-.song-verse b { color: var(--sun); font-weight: 500; white-space: nowrap; }
+.song-verse { margin: 12px 0 4px; padding: 12px 16px; min-height: 9em; border-left: 3px solid var(--sun); border-radius: 0 8px 8px 0; background: rgba(255, 255, 255, .06); }
+.song-verse figcaption { color: var(--on-night-soft); font-size: .8125rem; }
+.song-verse blockquote { margin: 4px 0 6px; color: var(--on-night); font-size: 1.0625rem; line-height: 1.7; }
+.song-verse cite { display: block; color: var(--sun); font-style: normal; font-size: .9375rem; }
+.verse-in { animation: verse-in .5s ease; }
+@keyframes verse-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
 /* 清單 */
 .queue { min-width: 0; display: flex; flex-direction: column; padding: clamp(14px, 2.2vw, 26px) clamp(14px, 2.2vw, 26px) 12px 0; }
@@ -251,5 +255,6 @@ h1 { font-size: clamp(3.25rem, 9vw, 6.5rem); line-height: 1.05; letter-spacing: 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .bg-layer, .btn, .track, .play-disc, .ctl { transition: none; }
+  .verse-in { animation: none; }
   .is-playing .track[aria-current="true"] .eq i { animation: none; transform: scaleY(.8); }
 }

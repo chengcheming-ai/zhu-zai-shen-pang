@@ -1,0 +1,39 @@
+name: 同步 YouTube 新歌
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: 讀取頻道並更新清單
+        id: sync
+        run: node scripts/sync-youtube.js
+      - name: 發布更新
+        env:
+          ADDED: ${{ steps.sync.outputs.added }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet catalog.js; then
+            git add catalog.js
+            git commit -m "新增詩歌：$ADDED"
+            git push
+            gh api -X POST "repos/${{ github.repository }}/pages/builds" || true
+          elif [ $(( $(date +%s) - $(git log -1 --format=%ct) )) -gt 3888000 ]; then
+            # GitHub 會停用 60 天沒有活動的排程，45 天沒更新就留一筆紀錄維持運作
+            git commit --allow-empty -m "維持自動同步運作"
+            git push
+          fi
