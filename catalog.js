@@ -1,5 +1,6 @@
 /* 歌曲與經文清單：scripts/sync-youtube.js 會自動新增，也可手動修改。新歌在最上面。 */
 window.SONGS = [
+{"id":"d-T09KLeyS8","zh":"祢是美好","en":"You Are Wonderful","time":"3:48","theme":"恩典喜樂","verse":{"text":"求你使我們早早飽得你的慈愛，好叫我們一生一世歡呼喜樂。","ref":"詩篇 90:14"}},
 {"id":"jpCHNsmz8-M","zh":"你永遠掌權","en":"You Reign Forever","time":"3:03","theme":"歡呼讚美","verse":{"text":"耶和華要作王，直到永遠！錫安哪，你的神要作王，直到萬代！你們要讚美耶和華！","ref":"詩篇 146:10"}},
 {"id":"N8M0rtN5oOM","zh":"你真好","en":"You Are So Good","time":"4:09","theme":"恩典喜樂","verse":{"text":"因為耶和華本為善。他的慈愛存到永遠；他的信實直到萬代。","ref":"詩篇 100:5"}},
 {"id":"-yZ0StOX6b0","zh":"祢是我的喜樂","en":"You Are My Joy","time":"3:56","theme":"恩典喜樂","verse":{"text":"耶和華是我的力量，是我的盾牌；我心裡倚靠他就得幫助。所以我心中歡樂，我必用詩歌頌讚他。","ref":"詩篇 28:7"}},
