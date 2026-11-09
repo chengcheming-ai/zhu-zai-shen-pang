@@ -8,6 +8,9 @@ const CHANNEL = "UCmoZoat_37Zbqo-Zpnze0TA";
 const ROOT = path.join(__dirname, "..");
 const CATALOG = path.join(ROOT, "catalog.js");
 const POOL = path.join(__dirname, "verse-pool.json");
+const AUDIO = path.join(ROOT, "audio", "songs");
+const MANIFEST = path.join(ROOT, "song-audio.js");
+const isSubtitled = (title) => /字幕版/.test(title);
 const HEADERS = {
   "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130 Safari/537.36",
   "Accept-Language": "zh-TW,zh;q=0.9"
@@ -90,6 +93,24 @@ function parseTitle(title) {
   return { zh: plain, en: "" };
 }
 
+/* 同名歌曲改用字幕版：沿用原本的經文、分類與背景播放音檔（音檔依新 ID 改名），只換影片 ID 與片長 */
+function switchToSubtitled(old, newId, seconds) {
+  const oldId = old.id;
+  const oldMp3 = path.join(AUDIO, oldId + ".mp3");
+  if (fs.existsSync(oldMp3)) {
+    fs.renameSync(oldMp3, path.join(AUDIO, newId + ".mp3"));
+    const text = fs.readFileSync(MANIFEST, "utf8");
+    fs.writeFileSync(MANIFEST, text.replace(JSON.stringify(oldId) + ":", JSON.stringify(newId) + ":"));
+  }
+  old.id = newId;
+  const time = clock(seconds);
+  if (time && time !== old.time) {
+    console.log("注意：《" + old.zh + "》字幕版片長 " + time + "，原本 " + old.time + "（背景播放音檔沿用舊版）");
+    old.time = time;
+  }
+  return oldId;
+}
+
 /* 從尚未用過的經文中，挑與歌名、說明最相符的一節；全部用過才重複使用 */
 function chooseVerse(pool, songs, zh, desc) {
   const body = desc.split("\n").filter((l) => !/[#📌💬📢]/u.test(l)).join("\n");
@@ -133,12 +154,27 @@ async function main() {
 
   const fresh = videos.filter((v) => !v.short && !known.has(v.id) && !/#shorts/i.test(v.title));
   const added = [];
+  const replaced = [];
   for (const v of fresh.reverse()) {
     const d = await details(v.id);
     if (d && (d.channelId !== CHANNEL || d.upcoming || d.seconds <= 60)) continue;
     const title = v.title || (d && d.title) || "";
     const { zh, en } = parseTitle(title);
     if (!zh) continue;
+
+    /* 頻道正把舊影片換成字幕版重傳，同名歌曲只保留一首：有字幕版就用字幕版 */
+    const same = songs.find((s) => s.zh === zh);
+    if (same) {
+      if (isSubtitled(title)) {
+        const oldId = switchToSubtitled(same, v.id, d ? d.seconds : 0);
+        replaced.push(same);
+        console.log("改用字幕版《" + zh + "》：" + oldId + " → " + v.id);
+      } else {
+        console.log("略過同名影片《" + zh + "》" + v.id + "（網站已有這首，保留現有版本）");
+      }
+      continue;
+    }
+
     const song = {
       id: v.id,
       zh,
@@ -151,13 +187,19 @@ async function main() {
     added.push(song);
   }
 
-  console.log("影片 " + videos.length + " 支，新增 " + added.length + " 首");
-  if (!added.length) return;
+  console.log("影片 " + videos.length + " 支，新增 " + added.length + " 首，改用字幕版 " + replaced.length + " 首");
+  const names = {};
+  songs.forEach((s) => { names[s.zh] = (names[s.zh] || 0) + 1; });
+  const dup = Object.keys(names).filter((n) => names[n] > 1);
+  if (dup.length) console.log("警告：清單仍有同名歌曲，請人工處理：" + dup.join("、"));
+  if (!added.length && !replaced.length) return;
   writeCatalog(head, songs);
   added.forEach((s) => console.log("新增《" + s.zh + "》→ " + s.theme + "｜" + s.verse.ref));
   if (process.env.GITHUB_OUTPUT) {
-    const names = added.map((s) => s.zh + "（" + s.verse.ref + "）").join("、");
-    fs.appendFileSync(process.env.GITHUB_OUTPUT, "added=" + names + "\n");
+    const parts = [];
+    if (added.length) parts.push("新增詩歌：" + added.map((s) => s.zh + "（" + s.verse.ref + "）").join("、"));
+    if (replaced.length) parts.push("改用字幕版：" + replaced.map((s) => s.zh).join("、"));
+    fs.appendFileSync(process.env.GITHUB_OUTPUT, "summary=" + parts.join("；") + "\n");
   }
 }
 

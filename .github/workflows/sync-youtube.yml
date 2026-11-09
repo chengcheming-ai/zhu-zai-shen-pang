@@ -23,14 +23,14 @@ jobs:
         run: node scripts/sync-youtube.js
       - name: 發布更新
         env:
-          ADDED: ${{ steps.sync.outputs.added }}
+          SUMMARY: ${{ steps.sync.outputs.summary }}
           GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if ! git diff --quiet catalog.js; then
-            git add catalog.js
-            git commit -m "新增詩歌：$ADDED"
+          git add -A catalog.js song-audio.js audio/songs
+          if ! git diff --cached --quiet; then
+            git commit -m "$SUMMARY"
             git push
             gh api -X POST "repos/${{ github.repository }}/pages/builds" || true
           elif [ $(( $(date +%s) - $(git log -1 --format=%ct) )) -gt 3888000 ]; then
