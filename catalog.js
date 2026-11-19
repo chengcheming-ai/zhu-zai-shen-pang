@@ -39,10 +39,10 @@ window.SONGS = [
 {"id":"JNpP5u42XDI","zh":"回應祢榮耀","en":"Respond to Your Glory","time":"4:40","theme":"榮耀敬拜","verse":{"text":"賜華冠與錫安悲哀的人，代替灰塵；喜樂油代替悲哀；讚美衣代替憂傷之靈；使他們稱為「公義樹」，是耶和華所栽的，叫他得榮耀。","ref":"以賽亞書 61:3"}},
 {"id":"e9vrArRN_0I","zh":"一起唱哈利路亞","en":"Hallelujah Together","time":"3:48","theme":"歡呼讚美","verse":{"text":"凡有氣息的都要讚美耶和華！你們要讚美耶和華！","ref":"詩篇 150:6"}},
 {"id":"HLVY-4kOSXE","zh":"榮耀在這裡","en":"Glory Is Here","time":"5:05","theme":"榮耀敬拜","verse":{"text":"我在聖所中曾如此瞻仰你，為要見你的能力和你的榮耀。","ref":"詩篇 63:2"}},
-{"id":"X2LutIva644","zh":"榮耀直到永遠","en":"Glory Forever","time":"4:31","theme":"榮耀敬拜","verse":{"text":"因為萬有都是本於他，倚靠他，歸於他。願榮耀歸給他，直到永遠。阿們！","ref":"羅馬書 11:36"}},
-{"id":"vwtlUBBqGaA","zh":"恩典一路唱","en":"Grace All the Way","time":"4:12","theme":"恩典喜樂","verse":{"text":"我的心哪，你要稱頌耶和華！不可忘記他的一切恩惠！","ref":"詩篇 103:2"}},
-{"id":"Ch_szulhUN0","zh":"永不止息的讚美","en":"Never-Ending Praise","time":"4:34","theme":"歡呼讚美","verse":{"text":"我又聽見在天上、地上、地底下、滄海裡，和天地間一切所有被造之物，都說：但願頌讚、尊貴、榮耀、權勢都歸給坐寶座的和羔羊，直到永永遠遠！","ref":"啟示錄 5:13"}},
-{"id":"c_pu_9JQfpI","zh":"歡呼榮耀歸給祢","en":"Glory to You","time":"3:42","theme":"榮耀敬拜","verse":{"text":"感謝神，使我們藉著我們的主耶穌基督得勝。","ref":"哥林多前書 15:57"}},
+{"id":"EmR2hu6Qqeg","zh":"榮耀直到永遠","en":"Glory Forever","time":"4:31","theme":"榮耀敬拜","verse":{"text":"因為萬有都是本於他，倚靠他，歸於他。願榮耀歸給他，直到永遠。阿們！","ref":"羅馬書 11:36"}},
+{"id":"2FfDEQlvRsc","zh":"恩典一路唱","en":"Grace All the Way","time":"4:12","theme":"恩典喜樂","verse":{"text":"我的心哪，你要稱頌耶和華！不可忘記他的一切恩惠！","ref":"詩篇 103:2"}},
+{"id":"qE2JfFv4L5A","zh":"永不止息的讚美","en":"Never-Ending Praise","time":"4:34","theme":"歡呼讚美","verse":{"text":"我又聽見在天上、地上、地底下、滄海裡，和天地間一切所有被造之物，都說：但願頌讚、尊貴、榮耀、權勢都歸給坐寶座的和羔羊，直到永永遠遠！","ref":"啟示錄 5:13"}},
+{"id":"Bpv4W0oWewA","zh":"歡呼榮耀歸給祢","en":"Glory to You","time":"3:42","theme":"榮耀敬拜","verse":{"text":"感謝神，使我們藉著我們的主耶穌基督得勝。","ref":"哥林多前書 15:57"}},
 {"id":"cNNH6TmTitw","zh":"榮耀在此刻","en":"Glory Right Now","time":"4:14","theme":"榮耀敬拜","verse":{"text":"彼此呼喊說：聖哉！聖哉！聖哉！萬軍之耶和華；他的榮光充滿全地！","ref":"以賽亞書 6:3"}},
 {"id":"Q744Mjafkdo","zh":"回到祢榮耀裡","en":"Back to Your Glory","time":"5:33","theme":"榮耀敬拜","verse":{"text":"我們不致消滅，是出於耶和華諸般的慈愛；是因他的憐憫不致斷絕。每早晨，這都是新的；你的誠實極其廣大！","ref":"耶利米哀歌 3:22-23"}}
 ];
