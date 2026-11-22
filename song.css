@@ -1,0 +1,31 @@
+/* 歌曲獨立頁（songs/）；顏色沿用 styles.css 的變數 */
+.sp-top { background: var(--night); color: var(--on-night); }
+.sp-top .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 20px; padding-block: 12px; }
+.sp-top .brand { display: inline-flex; align-items: center; gap: 10px; color: inherit; font-weight: 700; text-decoration: none; }
+.sp-top .brand img { border-radius: 50%; }
+.sp-top nav { display: flex; flex-wrap: wrap; gap: 4px 18px; }
+.sp-top nav a { color: var(--on-night-soft); text-decoration: none; padding-block: 6px; }
+.sp-top nav a:hover { color: var(--sun); }
+.sp-main { max-width: 860px; padding-block: 22px 56px; }
+.sp-main h1 { font-size: clamp(1.875rem, 5vw, 2.75rem); line-height: 1.25; text-shadow: none; letter-spacing: normal; }
+.sp-main h2 { font-size: 1.375rem; margin-bottom: 10px; }
+.sp-main section { margin-top: 36px; }
+.sp-main a { color: var(--accent); }
+.sp-crumb { font-size: .875rem; color: var(--muted); margin-bottom: 10px; }
+.sp-en { color: var(--muted); font-size: 1.125rem; }
+.sp-video { margin-top: 18px; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: #000; }
+.sp-video iframe { width: 100%; height: 100%; border: 0; display: block; }
+.sp-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 18px; }
+.sp-main .btn-sun { color: var(--sun-ink); }
+.sp-verse { margin: 0; padding: 18px 22px; border-radius: 12px; background: var(--glow); color: var(--glow-fg); }
+.sp-verse p { font-size: 1.125rem; }
+.sp-verse cite { display: block; margin-top: 8px; font-style: normal; color: var(--glow-muted); }
+.sp-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 16px 0 0; }
+.sp-facts div { padding: 10px 14px; border-radius: 10px; background: var(--band); }
+.sp-facts dt { font-size: .8125rem; color: var(--muted); }
+.sp-facts dd { margin: 0; }
+.sp-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.sp-main .sp-list a { display: block; padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; text-decoration: none; color: var(--fg); }
+.sp-main .sp-list a:hover { border-color: var(--accent); }
+.sp-list span { display: block; font-size: .875rem; color: var(--muted); }
+.sp-pn { display: flex; justify-content: space-between; gap: 16px; margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--line); }

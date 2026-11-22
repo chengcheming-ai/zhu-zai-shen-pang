@@ -21,6 +21,8 @@ jobs:
       - name: 讀取頻道並更新清單
         id: sync
         run: node scripts/sync-youtube.js
+      - name: 產生每首歌的網頁與 sitemap
+        run: node scripts/build-song-pages.js
       - name: 發布更新
         env:
           SUMMARY: ${{ steps.sync.outputs.summary }}
@@ -28,9 +30,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A catalog.js song-audio.js audio/songs
+          git add -A catalog.js song-audio.js audio/songs songs sitemap.xml sitemap-pages.xml scripts/song-slugs.json
           if ! git diff --cached --quiet; then
-            git commit -m "$SUMMARY"
+            git commit -m "${SUMMARY:-更新歌曲網頁}"
             git push
             gh api -X POST "repos/${{ github.repository }}/pages/builds" || true
           elif [ $(( $(date +%s) - $(git log -1 --format=%ct) )) -gt 3888000 ]; then
