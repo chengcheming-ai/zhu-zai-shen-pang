@@ -20,7 +20,7 @@
   <link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20261128">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "主在身旁", "alternateName": "主在身旁｜華語敬拜詩歌", "url": "https://chengcheming-ai.github.io/zhu-zai-shen-pang/", "inLanguage": "zh-Hant-TW", "sameAs": ["https://www.youtube.com/channel/UCmoZoat_37Zbqo-Zpnze0TA"]}</script>
 </head>
 <body>
@@ -60,6 +60,11 @@
           <a class="btn btn-ghost" href="#share">分享這些詩歌</a>
           <a class="btn btn-ghost" id="subscribe" href="#" target="_blank" rel="noopener">訂閱頻道</a>
         </div>
+        <ol class="howto" aria-label="怎麼聽">
+          <li><span aria-hidden="true">▶️</span>按「連續播放」，一首接一首</li>
+          <li><span aria-hidden="true">🎵</span>想聽哪首，在清單點那首</li>
+          <li><span aria-hidden="true">🔒</span>要鎖螢幕聽，按「背景播放」</li>
+        </ol>
       </div>
       <p class="bg-credit"><a id="bg-credit" href="#credits"></a></p>
     </div>
@@ -97,8 +102,8 @@
             </figure>
 
             <div class="mode-row" role="group" aria-label="播放模式">
-              <button class="chip" type="button" id="mode-video" aria-pressed="true">影片</button>
-              <button class="chip" type="button" id="mode-audio" aria-pressed="false">背景播放</button>
+              <button class="chip" type="button" id="mode-video" aria-pressed="true">🎬 影片</button>
+              <button class="chip" type="button" id="mode-audio" aria-pressed="false">🎧 背景播放</button>
               <span class="mode-hint">按下後可以鎖定螢幕或切到其他 App，音樂不會中斷</span>
             </div>
 
@@ -169,6 +174,14 @@
           <div><dt>創作</dt><dd>AI 輔助創作</dd></div>
           <div><dt>交流</dt><dd>想提供創作建議或和我互動，歡迎到 YouTube 影片下方留言。</dd></div>
         </dl>
+        <h3 class="faq-h">常見問題</h3>
+        <div class="faq">
+          <details class="qa"><summary><span>怎麼讓歌一直播下去？</span></summary><p>按上面的「連續播放全部詩歌」，就會一首接一首播。按清單旁的重複按鈕，可以選擇整個清單重複，或只重複同一首。</p></details>
+          <details class="qa"><summary><span>手機鎖螢幕後，還能繼續聽嗎？</span></summary><p>可以。在播放器下方按「🎧 背景播放」，之後鎖螢幕或切到其他 App，音樂都不會停。想看影片，再按「🎬 影片」切回來。</p></details>
+          <details class="qa"><summary><span>可以只聽某一種主題的歌嗎？</span></summary><p>可以。在「詩歌清單」上方點主題（例如「安靜親近」），清單就只會顯示那一類的歌；也可以在搜尋框打歌名。</p></details>
+          <details class="qa"><summary><span>每首歌的經文在哪裡看？</span></summary><p>播放時，播放器下方會顯示「這首歌的經文」。也可以到「<a href="songs/">所有詩歌與經文</a>」，每首歌都有自己的一頁。</p></details>
+          <details class="qa"><summary><span>怎麼分享給朋友？</span></summary><p>到頁面下方的「把這份喜樂分享出去」，按「分享這個網站」或「分享 YouTube 頻道」。手機會跳出分享選單，可以直接傳到 LINE。</p></details>
+        </div>
       </div>
     </section>
 
@@ -197,6 +210,7 @@
       <div class="wrap">
         <h2 id="credits-h">背景畫作出處</h2>
         <p class="muted">背景輪播的畫作都取材自聖經，授權資訊依維基共享資源（Wikimedia Commons）的檔案頁記載。畫名為本站中譯，點「來源」可查看原始資料。經文採和合本。</p>
+        <details class="credit-more"><summary>點開看每一幅畫的畫家、年代與授權</summary>
         <div class="credit-scroll">
           <table class="credit-table">
             <thead>
@@ -205,6 +219,7 @@
             <tbody id="credit-rows"></tbody>
           </table>
         </div>
+        </details>
       </div>
     </section>
   </main>

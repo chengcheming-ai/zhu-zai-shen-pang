@@ -279,3 +279,30 @@ body.stage-collapsed .queue { padding: clamp(14px, 2.2vw, 26px); }
   .verse-in { animation: none; }
   .is-playing .track[aria-current="true"] .eq i { animation: none; transform: scaleY(.8); }
 }
+
+/* ===== 2026-11-28 好讀好用：怎麼聽三步驟、常見問題點開看、出處表收合、字放大 ===== */
+.howto { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; counter-reset: hw; }
+.howto li { counter-increment: hw; display: flex; align-items: center; gap: 6px; padding: 7px 14px 7px 8px; border-radius: 999px; font-size: .95rem; color: var(--on-night);
+  background: rgba(12, 19, 42, .55); border: 1px solid var(--night-line); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.howto li::before { content: counter(hw); display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; font-size: .8rem; font-weight: 700; color: var(--sun-ink); background: var(--sun); }
+.mode-hint { font-size: .9rem; }
+.chip { font-size: .95rem; }
+.faq-h { margin: 36px 0 10px; font-size: 1.375rem; text-shadow: 0 1px 8px rgba(0, 0, 0, .7); }
+.faq { display: grid; gap: 8px; max-width: 46em; }
+.faq .qa { border-radius: 12px; background: rgba(12, 19, 42, .62); border: 1px solid var(--night-line); }
+.faq .qa > summary { list-style: none; display: flex; align-items: center; gap: 10px; padding: 13px 16px; cursor: pointer; font-weight: 700; min-height: 48px; }
+.faq .qa > summary::-webkit-details-marker { display: none; }
+.faq .qa > summary::before { content: "Q"; flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; font-size: .8rem; color: var(--sun-ink); background: var(--sun); }
+.faq .qa > summary span { flex: 1; }
+.faq .qa > summary::after { content: "▾"; color: var(--on-night-soft); transition: transform .2s; }
+.faq .qa[open] > summary::after { transform: rotate(180deg); }
+.faq .qa[open] { border-color: rgba(255, 210, 122, .45); }
+.faq .qa p { margin: 0; padding: 0 16px 14px 50px; color: var(--on-night-soft); line-height: 1.75; }
+.faq .qa p a { color: var(--sun); }
+.credit-more { margin-top: 14px; }
+.credit-more > summary { cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); color: var(--accent); font-weight: 700; list-style: none; }
+.credit-more > summary::-webkit-details-marker { display: none; }
+.credit-more > summary::after { content: "▾"; }
+.credit-more[open] > summary::after { content: "▴"; }
+.credit-more[open] .credit-scroll { margin-top: 14px; }
+@media (prefers-reduced-motion: reduce) { .faq .qa > summary::after { transition: none; } }
